@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import logo from '../assets/logo.png';
 import { useNavigate } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -47,6 +48,9 @@ const Register = () => {
     <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-green-100 via-green-200 to-green-300 p-4">
       <ToastContainer position="top-right" />
       <div className="bg-white bg-opacity-90 p-6 sm:p-8 rounded-2xl shadow-2xl w-full max-w-md animate-fadeIn">
+        <div className="flex justify-center mb-2">
+          <img src={logo} alt="Logo" className="w-16 h-16 animate-bounce" />
+        </div>
         <h2 className="text-3xl font-extrabold mb-4 text-center text-green-900 drop-shadow">Create Your Account</h2>
         <p className="mb-6 text-gray-600 text-center">Register to start managing your scrap rates and access exclusive features.</p>
         <form onSubmit={handleRegister} className="space-y-4">
