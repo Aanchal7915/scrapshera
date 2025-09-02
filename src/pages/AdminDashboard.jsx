@@ -216,7 +216,6 @@ const AdminDashboard = () => {
                                 <tr className="bg-gradient-to-r from-green-400 via-green-300 to-green-200 text-green-900">
                                     <th className="px-2 sm:px-4 py-2">User Name</th>
                                     <th className="px-2 sm:px-4 py-2">User Email</th>
-                                    <th className="px-2 sm:px-4 py-2">Phone Number</th>
                                     <th className="px-2 sm:px-4 py-2">Address</th>
                                     <th className="px-2 sm:px-4 py-2">Scheduled Date</th>
                                     <th className="px-2 sm:px-4 py-2">Status</th>
@@ -232,7 +231,6 @@ const AdminDashboard = () => {
                                         <tr key={pickup._id} className={`border-t transition-all duration-300 hover:bg-green-50 ${idx % 2 === 0 ? 'bg-green-100' : 'bg-white'} animate-fadeIn`}>
                                             <td className="px-2 sm:px-4 py-2 font-semibold text-green-900">{pickup.user?.name}</td>
                                             <td className="px-2 sm:px-4 py-2">{pickup.user?.email}</td>
-                                            <td className="px-2 sm:px-4 py-2">{pickup.user?.phoneNu || '-'}</td>
                                             <td className="px-2 sm:px-4 py-2">
                                                 {pickup.location ? (
                                                     <a

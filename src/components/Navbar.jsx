@@ -26,13 +26,11 @@ const Navbar = () => {
     >
       <div className="flex items-center justify-between">
         <Link to="/" className="flex items-center space-x-2 text-white hover:text-green-200 transition-colors duration-300">
-          <motion.img
+          <img
             src={logo}
             alt="ScrapShera Logo"
             className="w-10 h-10 rounded-full"
             onError={(e) => { e.target.onerror = null; e.target.src="https://placehold.co/40x40/CCCCCC/000000?text=Logo"; }}
-            animate={{ y: [0, -15, 0] }}
-            transition={{ repeat: Infinity, duration: 1, ease: "easeInOut" }}
           />
           <span className="text-xl font-bold">ScrapShera</span>
         </Link>
