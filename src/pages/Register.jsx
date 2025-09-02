@@ -31,7 +31,7 @@ const Register = () => {
       const data = await response.json();
       if (response.ok) {
         setSuccess(true);
-        toast.success(data?.message || 'Registration successful! Redirecting to login...', { autoClose: 15000 });
+        toast.success(data?.message || 'Registration successful! Redirecting to login...', { autoClose: 10000 });
 
         navigate('/login');
 
