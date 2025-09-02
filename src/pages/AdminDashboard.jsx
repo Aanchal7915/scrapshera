@@ -115,11 +115,11 @@ const AdminDashboard = () => {
     }, [page, limit, status, startDate, endDate, sort]);
 
     return (
-        <div className="min-h-screen bg-gray-100 p-4">
+    <div className="min-h-screen bg-gradient-to-br from-green-100 via-green-200 to-green-300 p-4">
             <ToastContainer position="top-right" />
             <div className="flex flex-col md:justify-between md:items-center mb-4 gap-4">
-                <h2 className="text-2xl font-bold">Admin Dashboard</h2>
-                <form className="flex flex-wrap gap-4 items-center w-full md:w-auto" onSubmit={e => { e.preventDefault(); fetchPickups(); }}>
+                <h2 className="text-3xl font-extrabold text-green-900 drop-shadow-lg animate-fadeIn">Admin Dashboard</h2>
+                <form className="flex flex-wrap gap-4 items-center w-full md:w-auto bg-white bg-opacity-80 rounded-xl shadow-lg p-4 animate-fadeIn" onSubmit={e => { e.preventDefault(); fetchPickups(); }}>
                     <div className="flex flex-col">
                         <label htmlFor="email" className="text-xs font-normal ml-1 text-gray-600">Search by Email</label>
                         <input
@@ -186,36 +186,37 @@ const AdminDashboard = () => {
                     </div>
                     <button
                         type="submit"
-                        className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 mt-6"
+                        className="px-4 py-2 bg-green-500 text-white rounded-lg shadow hover:bg-green-600 transition-all duration-300 mt-6"
                         disabled={loading}
                     >
-                        Refresh
+                        <span className="inline-block animate-pulse">Refresh</span>
                     </button>
                 </form>
             </div>
             {loading ? (
                 <div className="flex justify-center items-center h-32">
-                    <svg className="animate-spin h-8 w-8 text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <svg className="animate-spin h-10 w-10 text-green-500 drop-shadow-lg" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                         <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                         <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
                     </svg>
                 </div>
             ) : error ? (
                 <div className='h-[400px] flex justify-center items-center'>
-                    <div className="text-red-500 text-center text-lg">
-                        <p className='text-lg font-medium text-red-900'>Something went wrong.</p>
-                        <p className='text-sm text-gray-800'>Please try gain later!</p>
-                        <button className="mt-2 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700" onClick={fetchPickups}>Retry</button>
+                    <div className="text-center text-lg bg-white bg-opacity-80 rounded-xl shadow-lg p-8 animate-fadeIn">
+                        <p className='text-lg font-bold text-red-900 drop-shadow'>Something went wrong.</p>
+                        <p className='text-sm text-gray-800'>Please try again later!</p>
+                        <button className="mt-2 px-4 py-2 bg-green-500 text-white rounded-lg shadow hover:bg-green-600 transition-all duration-300 animate-pulse" onClick={fetchPickups}>Retry</button>
                     </div>
                 </div>
             ) : (
-                <div className="overflow-x-auto">
+                <div className="overflow-x-auto animate-fadeIn">
                     <div className="w-full overflow-x-auto">
-                        <table className="min-w-full bg-white rounded shadow text-xs sm:text-sm">
+                        <table className="min-w-full bg-white rounded-2xl shadow-2xl border border-green-200 text-xs sm:text-sm">
                             <thead>
-                                <tr>
+                                <tr className="bg-gradient-to-r from-green-400 via-green-300 to-green-200 text-green-900">
                                     <th className="px-2 sm:px-4 py-2">User Name</th>
                                     <th className="px-2 sm:px-4 py-2">User Email</th>
+                                    <th className="px-2 sm:px-4 py-2">Phone Number</th>
                                     <th className="px-2 sm:px-4 py-2">Address</th>
                                     <th className="px-2 sm:px-4 py-2">Scheduled Date</th>
                                     <th className="px-2 sm:px-4 py-2">Status</th>
@@ -225,19 +226,20 @@ const AdminDashboard = () => {
                             </thead>
                             <tbody>
                                 {pickups.length === 0 ? (
-                                    <tr><td colSpan={7} className="text-center py-4">No pickups found.</td></tr>
+                                    <tr><td colSpan={7} className="text-center py-4 text-green-700">No pickups found.</td></tr>
                                 ) : (
-                                    pickups.map(pickup => (
-                                        <tr key={pickup._id} className="border-t">
-                                            <td className="px-2 sm:px-4 py-2">{pickup.user?.name}</td>
+                                    pickups.map((pickup, idx) => (
+                                        <tr key={pickup._id} className={`border-t transition-all duration-300 hover:bg-green-50 ${idx % 2 === 0 ? 'bg-green-100' : 'bg-white'} animate-fadeIn`}>
+                                            <td className="px-2 sm:px-4 py-2 font-semibold text-green-900">{pickup.user?.name}</td>
                                             <td className="px-2 sm:px-4 py-2">{pickup.user?.email}</td>
+                                            <td className="px-2 sm:px-4 py-2">{pickup.user?.phoneNu || '-'}</td>
                                             <td className="px-2 sm:px-4 py-2">
                                                 {pickup.location ? (
                                                     <a
                                                         href={pickup.location}
                                                         target="_blank"
                                                         rel="noopener noreferrer"
-                                                        className="flex items-center gap-1 text-blue-600 hover:underline"
+                                                        className="flex items-center gap-1 text-green-700 hover:underline"
                                                         title="View on Google Maps"
                                                     >
                                                         <FaMapMarkerAlt className="inline-block text-red-500" />
@@ -248,11 +250,13 @@ const AdminDashboard = () => {
                                                 )}
                                             </td>
                                             <td className="px-2 sm:px-4 py-2">{new Date(pickup.scheduledDate).toLocaleString()}</td>
-                                            <td className="px-2 sm:px-4 py-2">{pickup.status}</td>
+                                            <td className="px-2 sm:px-4 py-2">
+                                                <span className={`px-2 py-1 rounded-full text-xs font-bold shadow ${pickup.status === 'completed' ? 'bg-green-500 text-white' : pickup.status === 'scheduled' ? 'bg-yellow-400 text-green-900' : 'bg-red-400 text-white'}`}>{pickup.status}</span>
+                                            </td>
                                             <td className="px-2 sm:px-4 py-2">{new Date(pickup.createdAt).toLocaleString()}</td>
                                             <td className="px-2 sm:px-4 py-2">
                                                 <button
-                                                    className="px-2 py-1 text-xs bg-yellow-500 text-white rounded hover:bg-yellow-600 w-full"
+                                                    className="px-2 py-1 text-xs bg-yellow-500 text-white rounded-lg shadow hover:bg-yellow-600 w-full transition-all duration-300 animate-pulse"
                                                     onClick={() => openModal(pickup)}
                                                 >Update</button>
                                             </td>
@@ -264,9 +268,9 @@ const AdminDashboard = () => {
                     </div>
                     {/* Modal for updating status */}
                     {modalOpen && selectedPickup ? (
-                        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40">
-                            <div className="bg-white rounded-lg shadow-lg p-4 sm:p-6 w-full max-w-md mx-2">
-                                <h3 className="text-lg sm:text-xl font-bold mb-4">Update Pickup Status</h3>
+                        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40 animate-fadeIn">
+                            <div className="bg-white rounded-2xl shadow-2xl p-6 w-full max-w-md mx-2 border border-green-200 animate-fadeIn">
+                                <h3 className="text-xl font-extrabold mb-4 text-green-900 drop-shadow">Update Pickup Status</h3>
                                 <div className="mb-2 text-xs sm:text-base"><span className="font-semibold">User:</span> {selectedPickup.user?.name} ({selectedPickup.user?.email})</div>
                                 <div className="mb-2 text-xs sm:text-base"><span className="font-semibold">Address:</span> {selectedPickup.address}</div>
                                 <div className="mb-2 text-xs sm:text-base"><span className="font-semibold">Scheduled Date:</span> {new Date(selectedPickup.scheduledDate).toLocaleString()}</div>
@@ -277,7 +281,7 @@ const AdminDashboard = () => {
                                         id="updateStatus"
                                         value={updateStatus}
                                         onChange={e => setUpdateStatus(e.target.value)}
-                                        className="px-2 py-1 border rounded w-full"
+                                        className="px-2 py-1 border rounded w-full focus:ring-2 focus:ring-green-500"
                                     >
                                         <option value="scheduled">Scheduled</option>
                                         <option value="completed">Completed</option>
@@ -286,7 +290,7 @@ const AdminDashboard = () => {
                                 </div>
                                 {updateLoading && (
                                     <div className="flex items-center justify-center mb-2">
-                                        <svg className="animate-spin h-5 w-5 text-blue-600 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                        <svg className="animate-spin h-6 w-6 text-green-500 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                                             <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                                             <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
                                         </svg>
@@ -301,12 +305,12 @@ const AdminDashboard = () => {
                                 )}
                                 <div className="flex flex-col sm:flex-row justify-end gap-2">
                                     <button
-                                        className="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400"
+                                        className="px-4 py-2 bg-gray-300 rounded-lg shadow hover:bg-gray-400 transition-all duration-300"
                                         onClick={closeModal}
                                         disabled={updateLoading}
                                     >Cancel</button>
                                     <button
-                                        className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+                                        className="px-4 py-2 bg-green-500 text-white rounded-lg shadow hover:bg-green-600 transition-all duration-300 animate-pulse"
                                         onClick={handleUpdateStatus}
                                         disabled={updateLoading}
                                     >{updateLoading ? 'Updating...' : 'Update'}</button>
@@ -315,18 +319,18 @@ const AdminDashboard = () => {
                         </div>
                     ) : null}
                     {/* Pagination Controls */}
-                    <div className="flex flex-col md:flex-row justify-between items-center mt-4 gap-2">
-                        <div className="text-sm text-gray-700 mb-2 md:mb-0">Page {page} | Showing {limit} per page</div>
+                    <div className="flex flex-col md:flex-row justify-between items-center mt-4 gap-2 animate-fadeIn">
+                        <div className="text-sm text-green-900 mb-2 md:mb-0 font-semibold">Page {page} | Showing {limit} per page</div>
                         <div className="flex gap-2">
                             <button
-                                className="px-3 py-1 bg-gray-300 rounded hover:bg-gray-400 disabled:opacity-50"
+                                className="px-3 py-1 bg-green-200 rounded-lg shadow hover:bg-green-400 transition-all duration-300 disabled:opacity-50"
                                 onClick={() => setPage(page > 1 ? page - 1 : 1)}
                                 disabled={page <= 1 || loading}
                             >
                                 Previous
                             </button>
                             <button
-                                className="px-3 py-1 bg-gray-300 rounded hover:bg-gray-400 disabled:opacity-50"
+                                className="px-3 py-1 bg-green-200 rounded-lg shadow hover:bg-green-400 transition-all duration-300 disabled:opacity-50"
                                 onClick={() => setPage(page + 1)}
                                 disabled={loading || pickups.length < limit}
                             >

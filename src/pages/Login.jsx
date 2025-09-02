@@ -65,12 +65,12 @@ const Login = () => {
   }, [navigate]);
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
+  <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-green-100 via-green-200 to-green-300 animate-fadeIn">
       <ToastContainer position="top-right" />
-      <div className="bg-white p-8 rounded shadow-md w-full max-w-md">
-        <h2 className="text-2xl font-bold mb-4 text-center">Welcome Back!</h2>
-        <p className="mb-6 text-gray-600 text-center">Login to access your account and manage your scrap rates easily.</p>
-        <form onSubmit={handleLogin} className="space-y-4">
+  <div className="bg-white bg-opacity-90 p-8 rounded-2xl shadow-2xl w-full max-w-md border border-green-200 animate-fadeIn">
+  <h2 className="text-3xl font-extrabold mb-4 text-center text-green-900 drop-shadow animate-fadeIn">Welcome Back!</h2>
+  <p className="mb-6 text-green-700 text-center animate-fadeIn">Login to access your account and manage your scrap rates easily.</p>
+  <form onSubmit={handleLogin} className="space-y-4 animate-fadeIn">
           <div>
             <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email</label>
             <input
@@ -98,19 +98,19 @@ const Login = () => {
 
           <button
             type="submit"
-            className={`w-full py-2 px-4 bg-green-500 hover:bg-green-600 text-white rounded font-semibold flex items-center justify-center ${loading ? 'opacity-70 cursor-not-allowed' : ''}`}
+            className={`w-full py-2 px-4 bg-green-500 hover:bg-green-600 text-white rounded-lg shadow font-semibold flex items-center justify-center transition-all duration-300 ${loading ? 'opacity-70 cursor-not-allowed' : ''}`}
             disabled={loading}
           >
             {loading ? (
-              <span className="flex items-center">
-                <svg className="animate-spin h-5 w-5 mr-2 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+              <span className="flex items-center animate-pulse">
+                <svg className="animate-spin h-6 w-6 mr-2 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                   <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                   <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
                 </svg>
                 Logging in...
               </span>
             ) : (
-              'Login'
+              <span className="inline-block animate-fadeIn">Login</span>
             )}
           </button>
           {/* Error message below submit button */}
@@ -118,9 +118,9 @@ const Login = () => {
             <div className="text-red-500 text-sm text-center">{error}</div>
           )}
         </form>
-        <div className="mt-6 text-center">
-          <span className="text-gray-600">Don't have an account?</span>
-          <a href="/register" className="ml-2 text-green-600 hover:underline font-semibold">Register</a>
+        <div className="mt-6 text-center animate-fadeIn">
+          <span className="text-green-900 font-semibold">Don't have an account?</span>
+          <a href="/register" className="ml-2 text-green-600 hover:underline font-bold animate-pulse">Register</a>
         </div>
       </div>
     </div>
