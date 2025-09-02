@@ -58,7 +58,7 @@ const Register = () => {
               value={name}
               onChange={e => setName(e.target.value)}
               required
-              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-green-500"
               placeholder="Enter your name"
             />
           </div>
@@ -70,7 +70,7 @@ const Register = () => {
               value={email}
               onChange={e => setEmail(e.target.value)}
               required
-              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-green-500"
               placeholder="Enter your email"
             />
           </div>
@@ -82,7 +82,7 @@ const Register = () => {
               value={phoneNu}
               onChange={e => setPhoneNu(e.target.value)}
               required
-              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-green-500"
               placeholder="Enter your phone number"
             />
           </div>
@@ -94,14 +94,14 @@ const Register = () => {
               value={password}
               onChange={e => setPassword(e.target.value)}
               required
-              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-green-500"
               placeholder="Create a password"
             />
           </div>
           
           <button
             type="submit"
-            className={`w-full py-2 px-4 bg-blue-600 text-white rounded font-semibold flex items-center justify-center ${loading ? 'opacity-70 cursor-not-allowed' : ''}`}
+            className={`w-full py-2 px-4 bg-green-500 hover:bg-green-600 text-white rounded font-semibold flex items-center justify-center ${loading ? 'opacity-70 cursor-not-allowed' : ''}`}
             disabled={loading}
           >
             {loading ? (
@@ -123,7 +123,7 @@ const Register = () => {
         </form>
         <div className="mt-6 text-center">
           <span className="text-gray-600">Already have an account?</span>
-          <a href="/login" className="ml-2 text-blue-600 hover:underline font-semibold">Login</a>
+          <a href="/login" className="ml-2 text-green-600 hover:underline font-semibold">Login</a>
         </div>
       </div>
     </div>

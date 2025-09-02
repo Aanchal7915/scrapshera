@@ -61,24 +61,24 @@ const Navbar = () => {
           {/* Auth links */}
           {!isLoggedIn ? (
             <>
-              <Link to="/login" className="px-3 py-2 rounded-lg hover:bg-blue-600 bg-blue-500 transition-colors duration-300">
-                Login
-              </Link>
-              <Link to="/register" className="px-3 py-2 rounded-lg hover:bg-blue-600 bg-blue-400 transition-colors duration-300">
-                Signup
-              </Link>
+                <Link to="/login" className="px-3 py-2 rounded-lg bg-green-500 hover:bg-green-600 transition-colors duration-300">
+                  Login
+                </Link>
+                <Link to="/register" className="px-3 py-2 rounded-lg bg-green-500 hover:bg-green-600 transition-colors duration-300">
+                  Signup
+                </Link>
             </>
           ) : (
             <>
-              <Link to={user && user.role === 'admin' ? "/dashboard/admin" : "/dashboard/user"} className="px-3 py-2 rounded-lg hover:bg-purple-600 bg-purple-500 transition-colors duration-300">
-                Dashboard
-              </Link>
-              <button
-                onClick={handleLogout}
-                className="px-3 py-2 rounded-lg hover:bg-red-600 bg-red-500 transition-colors duration-300"
-              >
-                Logout
-              </button>
+                <Link to={user && user.role === 'admin' ? "/dashboard/admin" : "/dashboard/user"} className="px-3 py-2 rounded-lg bg-green-500 hover:bg-green-600 transition-colors duration-300">
+                  Dashboard
+                </Link>
+                <button
+                  onClick={handleLogout}
+                  className="px-3 py-2 rounded-lg bg-green-500 hover:bg-green-600 transition-colors duration-300"
+                >
+                  Logout
+                </button>
             </>
           )}
         </div>
@@ -101,24 +101,24 @@ const Navbar = () => {
           </a>
           {!isLoggedIn ? (
             <>
-              <Link to="/login" className="px-3 py-2 rounded-lg hover:bg-blue-600 bg-blue-500 transition-colors duration-300" onClick={() => setMenuOpen(false)}>
-                Login
-              </Link>
-              <Link to="/register" className="px-3 py-2 rounded-lg hover:bg-blue-600 bg-blue-400 transition-colors duration-300" onClick={() => setMenuOpen(false)}>
-                Signup
-              </Link>
+                <Link to="/login" className="px-3 py-2 rounded-lg bg-green-500 hover:bg-green-600 transition-colors duration-300" onClick={() => setMenuOpen(false)}>
+                  Login
+                </Link>
+                <Link to="/register" className="px-3 py-2 rounded-lg bg-green-500 hover:bg-green-600 transition-colors duration-300" onClick={() => setMenuOpen(false)}>
+                  Signup
+                </Link>
             </>
           ) : (
             <>
-              <Link to={user && user.role === 'admin' ? "/dashboard/admin" : "/dashboard/user"} className="px-3 py-2 rounded-lg hover:bg-purple-600 bg-purple-500 transition-colors duration-300" onClick={() => setMenuOpen(false)}>
-                Dashboard
-              </Link>
-              <button
-                onClick={() => { handleLogout(); setMenuOpen(false); }}
-                className="px-3 py-2 rounded-lg hover:bg-red-600 bg-red-500 transition-colors duration-300"
-              >
-                Logout
-              </button>
+                <Link to={user && user.role === 'admin' ? "/dashboard/admin" : "/dashboard/user"} className="px-3 py-2 rounded-lg bg-green-500 hover:bg-green-600 transition-colors duration-300" onClick={() => setMenuOpen(false)}>
+                  Dashboard
+                </Link>
+                <button
+                  onClick={() => { handleLogout(); setMenuOpen(false); }}
+                  className="px-3 py-2 rounded-lg bg-green-500 hover:bg-green-600 transition-colors duration-300"
+                >
+                  Logout
+                </button>
             </>
           )}
         </div>
