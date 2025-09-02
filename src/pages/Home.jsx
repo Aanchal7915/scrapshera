@@ -1,9 +1,10 @@
-
 import React from "react";
 import { motion } from "framer-motion";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import logo from "../assets/logo.png"
-import { useState } from "react";
+import { useState, useRef } from "react";
+import { ToastContainer, toast } from 'react-toastify';
+import "react-toastify/dist/ReactToastify.css";
 
 
 const getIconComponent = (iconName) => {
@@ -126,6 +127,7 @@ const reviews = [
 
 export default function Home() {
   const homePageScrapItems = scrapData.slice(0, 12); // Take a subset of items for the home page
+  const navigate = useNavigate();
 
   // Animation variants for looping icons in "How It Works"
   const iconVariants = {
@@ -141,46 +143,123 @@ export default function Home() {
   };
 
   // State for form inputs
-// State for form inputs
-  const [mobileNumber, setMobileNumber] = useState('');
   const [pickupLocation, setPickupLocation] = useState('');
   const [dateTime, setDateTime] = useState('');
   const [itemsList, setItemsList] = useState('');
-  const [name, setName] = useState(''); // <<< ADD THIS LINE
+  const [latitude, setLatitude] = useState(null);
+  const [longitude, setLongitude] = useState(null);
+  const [locationError, setLocationError] = useState('');
+  const [locationChecked, setLocationChecked] = useState(false);
+  const [submitError, setSubmitError] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false); // <-- Add this state
+  const mapRef = useRef(null);
 
-  const handleFormSubmit = (e) => {
-    e.preventDefault(); // Prevent default form submission
+  // Modified: When checkbox is checked, get location
+  const handleLocationCheckbox = async (e) => {
+    const checked = e.target.checked;
+    setLocationChecked(checked);
+    if (checked) {
+      if (!navigator.geolocation) {
+        setLocationError("Geolocation is not supported by your browser.");
+        setLocationChecked(false);
+        return;
+      }
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          setLatitude(position.coords.latitude);
+          setLongitude(position.coords.longitude);
+          setLocationError('');
+        },
+        (error) => {
+          setLocationError("Unable to retrieve your location.");
+          setLocationChecked(false);
+        }
+      );
+    } else {
+      setLatitude(null);
+      setLongitude(null);
+      setLocationError('');
+    }
+  };
 
-    const phoneNumberForWhatsapp = "9253625099"; // Your phone number for WhatsApp
-    const message = encodeURIComponent( // Construct the message for WhatsApp
-      `Hi ScrapShera Team!\n\n` +
-      `I'd like to schedule a scrap pickup.\n\n` +
-      `My Name: ${name}\n` + // <<< ADD NAME TO MESSAGE
-      `Mobile Number: ${mobileNumber}\n` +
-      `Pickup Location: ${pickupLocation}\n` +
-      `Preferred Date/Time: ${dateTime}\n` +
-      `List of Items: ${itemsList}\n\n` +
-      `I want to sell scrap and promote a greener environment with ScrapShera!` // Your desired promotional text
-    );
+  // Send data to backend
+  const handleFormSubmit = async (e) => {
+    e.preventDefault();
+    setSubmitError("");
+    setIsSubmitting(true); // <-- Start loading
 
-    // Change from mailto to WhatsApp deep link
-    window.open(`https://wa.me/${9253625099}?text=${message}`, '_blank'); // <<< CHANGE THIS LINE
+    // Check if user is logged in
+    const isLoggedIn = !!localStorage.getItem("token");
+    if (!isLoggedIn) {
+      toast.error("Please login first to book a pickup.");
+      setIsSubmitting(false); // <-- Stop loading
+      navigate("/login");
+      return;
+    }
 
-    // Optionally clear the form after submission attempt
-    setMobileNumber('');
-    setPickupLocation('');
-    setDateTime('');
-    setItemsList('');
-    setName(''); // <<< CLEAR NAME FIELD
+    const formData = {
+      pickupLocation,
+      dateTime,
+      itemsList,
+      latitude,
+      longitude,
+    };
+
+    if(!latitude || !longitude || !locationChecked || !pickupLocation || !dateTime || !itemsList){
+      setSubmitError("All fields are required including location.");
+      setIsSubmitting(false); // <-- Stop loading
+      return;
+    }
+
+    try {
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URI}/pickups`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (response.status === 401 || response.status === 403) {
+        setSubmitError("You are not authorized. Please login again.");
+        toast.error("Session expired or not authorized. Please login again.");
+        localStorage.removeItem("token");
+        setIsSubmitting(false); // <-- Stop loading
+        setTimeout(() => {
+          navigate("/login");
+        }, 1500);
+        return;
+      }
+
+      if (!response.ok) {
+        const data = await response.json();
+        setSubmitError("Something went wrong. Please try again.");
+        setIsSubmitting(false); // <-- Stop loading
+        return;
+      }
+
+      toast.success("Pickup booked successfully!");
+      setPickupLocation('');
+      setDateTime('');
+      setItemsList('');
+      setLatitude(null);
+      setLongitude(null);
+      navigate('/dashboard/user'); // Redirect to user dashboard
+    } catch (error) {
+      setSubmitError("Network error or something went wrong. Please try again later.");
+    }
+    setIsSubmitting(false); // <-- Stop loading
   };
   return (
     <div className="bg-green-50 text-gray-800 font-sans">
+      <ToastContainer position="top-right" />
       {/* Tailwind CSS CDN and Google Font */}
       <script src="https://cdn.tailwindcss.com"></script>
       <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
 
       {/* Navbar */}
-      
+
 
       {/* Hero Section */}
       <section className="px-6 py-16 text-center">
@@ -191,7 +270,7 @@ export default function Home() {
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
-          onError={(e) => { e.target.onerror = null; e.target.src="https://placehold.co/128x128/CCCCCC/000000?text=Logo"; }}
+          onError={(e) => { e.target.onerror = null; e.target.src = "https://placehold.co/128x128/CCCCCC/000000?text=Logo"; }}
         />
         <motion.h1
           className="text-4xl md:text-5xl font-bold text-green-800 mb-4"
@@ -206,8 +285,8 @@ export default function Home() {
         </p>
       </section>
 
-     {/* form */}
-       <section className="px-4 py-10 bg-white max-w-2xl mx-auto rounded-xl shadow-xl">
+      {/* form */}
+      <section className="px-4 py-10 bg-white max-w-2xl mx-auto rounded-xl shadow-xl">
         <h2 className="text-2xl font-bold text-center mb-6 text-green-700">
           Schedule Your Effortless Pickup
         </h2>
@@ -215,22 +294,7 @@ export default function Home() {
           onSubmit={handleFormSubmit} // Call the new handler
           className="grid grid-cols-1 gap-4"
         >
-          <input
-            type="text"
-            placeholder="Your Name" // <<< ADD THIS INPUT
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            required
-            className="p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400"
-          />
-          <input
-            type="text"
-            placeholder="Your Mobile Number"
-            value={mobileNumber}
-            onChange={(e) => setMobileNumber(e.target.value)}
-            required
-            className="p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400"
-          />
+          {/* Removed Name and Mobile Number inputs */}
           <input
             type="text"
             placeholder="Pickup Location"
@@ -239,6 +303,18 @@ export default function Home() {
             required
             className="p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400"
           />
+          <label className="flex items-center gap-2">
+            <input
+              type="checkbox"
+              checked={locationChecked}
+              onChange={handleLocationCheckbox}
+              required
+              className="w-4 h-4 text-green-600 border-gray-300 rounded focus:ring-green-500"
+            />
+            <span className="text-sm">
+              I allow ScrapShera to capture my live location (required)
+            </span>
+          </label>
           <input
             type="datetime-local"
             value={dateTime}
@@ -254,9 +330,34 @@ export default function Home() {
             required
             className="p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400"
           ></textarea>
-          <button type="submit" className="bg-green-600 hover:bg-green-700 text-white py-3 rounded-lg font-semibold shadow-md transition-colors duration-300">
-            Book Pickup
+          {latitude && longitude && (
+            <div className="text-sm text-green-700">
+              Location set: {latitude.toFixed(5)}, {longitude.toFixed(5)}
+            </div>
+          )}
+          {locationError && (
+            <div className="text-sm text-red-600">{locationError}</div>
+          )}
+          <button
+            type="submit"
+            className="bg-green-600 hover:bg-green-700 text-white py-3 rounded-lg font-semibold shadow-md transition-colors duration-300 flex items-center justify-center"
+            
+          >
+            {isSubmitting ? (
+              <>
+                <svg className="animate-spin h-5 w-5 mr-2 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"></path>
+                </svg>
+                Booking...
+              </>
+            ) : (
+              "Book Pickup"
+            )}
           </button>
+          {submitError && (
+            <div className="text-red-600 text-center mt-2">{submitError}</div>
+          )}
         </form>
       </section>
 
@@ -398,7 +499,7 @@ export default function Home() {
         </div>
       </section>
 
-      
+
     </div>
   );
 }

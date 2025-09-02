@@ -1,8 +1,7 @@
-
-
 import React, { useEffect, useState } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { FaMapMarkerAlt } from "react-icons/fa";
 
 const AdminDashboard = () => {
     // Modal state for updating status
@@ -232,7 +231,22 @@ const AdminDashboard = () => {
                                         <tr key={pickup._id} className="border-t">
                                             <td className="px-2 sm:px-4 py-2">{pickup.user?.name}</td>
                                             <td className="px-2 sm:px-4 py-2">{pickup.user?.email}</td>
-                                            <td className="px-2 sm:px-4 py-2">{pickup.address}</td>
+                                            <td className="px-2 sm:px-4 py-2">
+                                                {pickup.location ? (
+                                                    <a
+                                                        href={pickup.location}
+                                                        target="_blank"
+                                                        rel="noopener noreferrer"
+                                                        className="flex items-center gap-1 text-blue-600 hover:underline"
+                                                        title="View on Google Maps"
+                                                    >
+                                                        <FaMapMarkerAlt className="inline-block text-red-500" />
+                                                        <span>{pickup.address}</span>
+                                                    </a>
+                                                ) : (
+                                                    pickup.address
+                                                )}
+                                            </td>
                                             <td className="px-2 sm:px-4 py-2">{new Date(pickup.scheduledDate).toLocaleString()}</td>
                                             <td className="px-2 sm:px-4 py-2">{pickup.status}</td>
                                             <td className="px-2 sm:px-4 py-2">{new Date(pickup.createdAt).toLocaleString()}</td>

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import useAuthStatus from '../hooks/useAuthStatus';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -9,6 +10,8 @@ const Login = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
+  const { login } = useAuthStatus();
+
 
   const navigate = useNavigate();
 
@@ -29,22 +32,20 @@ const Login = () => {
       if (response.ok && data.token && data.user) {
         localStorage.setItem('token', data.token);
         localStorage.setItem('user', JSON.stringify(data.user));
-        setSuccess(true);
-        toast.success('Login successful! Redirecting...', { autoClose: 1500 });
-        setTimeout(() => {
-          if (data.user.role === 'admin') {
-            navigate('/dashboard/admin');
-          } else {
-            navigate('/dashboard/user');
-          }
-        }, 1500);
+        login(); 
+        toast.success('Login successful! Redirecting...', { autoClose: 1000 });
+
+        if (data.user.role === 'admin') {
+          navigate('/dashboard/admin');
+        } else {
+          navigate('/dashboard/user');
+        }
+
       } else {
-        setError(data.message || 'Login failed. Please check your credentials.');
-        toast.error(data.message || 'Login failed. Please check your credentials.');
+        setError('Login failed. Please check your credentials.');
       }
     } catch (err) {
-      setError('Network error. Please try again.');
-      toast.error('Network error. Please try again.');
+      setError('Network error or something went wrong. Please try again later.');
     }
     setLoading(false);
   };
@@ -65,7 +66,7 @@ const Login = () => {
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
-  <ToastContainer position="top-right" />
+      <ToastContainer position="top-right" />
       <div className="bg-white p-8 rounded shadow-md w-full max-w-md">
         <h2 className="text-2xl font-bold mb-4 text-center">Welcome Back!</h2>
         <p className="mb-6 text-gray-600 text-center">Login to access your account and manage your scrap rates easily.</p>
@@ -94,7 +95,7 @@ const Login = () => {
               placeholder="Enter your password"
             />
           </div>
-          
+
           <button
             type="submit"
             className={`w-full py-2 px-4 bg-blue-600 text-white rounded font-semibold flex items-center justify-center ${loading ? 'opacity-70 cursor-not-allowed' : ''}`}

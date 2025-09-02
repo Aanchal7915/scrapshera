@@ -1,38 +1,20 @@
 // src/components/Navbar.jsx (or wherever you prefer to place it)
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Link } from 'react-router-dom';
-import { motion } from 'framer-motion'; // Import motion for animations
-import logo from "../assets/logo.png"
+import { useNavigate, Link } from 'react-router-dom';
+import { motion } from 'framer-motion';
+import logo from "../assets/logo.png";
+import useAuthStatus from '../hooks/useAuthStatus'; // <-- Import the custom hook
 
 const Navbar = () => {
-  const phoneNumber = "9253625099"; // Your phone number for direct call
-
-  // Auth state
-  const [isAuthenticated, setIsAuthenticated] = React.useState(!!localStorage.getItem('token'));
+  const phoneNumber = "9253625099";
+  const { isLoggedIn, logout } = useAuthStatus(); // <-- Use the hook
   const user = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : null;
   const [menuOpen, setMenuOpen] = useState(false);
   const navigate = useNavigate();
 
-  // Listen for localStorage changes (for logout/login from other tabs)
-    React.useEffect(() => {
-      const handleAuthChange = () => {
-        setIsAuthenticated(!!localStorage.getItem('token'));
-      };
-      window.addEventListener('storage', handleAuthChange);
-      window.addEventListener('authChanged', handleAuthChange);
-      return () => {
-        window.removeEventListener('storage', handleAuthChange);
-        window.removeEventListener('authChanged', handleAuthChange);
-      };
-    }, []);
-
   const handleLogout = () => {
-  localStorage.removeItem('token');
-  localStorage.removeItem('user');
-  setIsAuthenticated(false);
-  window.dispatchEvent(new Event('authChanged'));
-  navigate('/login');
+    logout();
+    navigate('/login');
   };
 
   return (
@@ -77,7 +59,7 @@ const Navbar = () => {
             Call Us
           </a>
           {/* Auth links */}
-          {!isAuthenticated ? (
+          {!isLoggedIn ? (
             <>
               <Link to="/login" className="px-3 py-2 rounded-lg hover:bg-blue-600 bg-blue-500 transition-colors duration-300">
                 Login
@@ -117,7 +99,7 @@ const Navbar = () => {
           >
             Call Us
           </a>
-          {!isAuthenticated ? (
+          {!isLoggedIn ? (
             <>
               <Link to="/login" className="px-3 py-2 rounded-lg hover:bg-blue-600 bg-blue-500 transition-colors duration-300" onClick={() => setMenuOpen(false)}>
                 Login

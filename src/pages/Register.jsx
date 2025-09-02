@@ -13,7 +13,6 @@ const Register = () => {
   const [success, setSuccess] = useState(false);
   const navigate = useNavigate();
   const backendUri=process.env.REACT_APP_BACKEND_URI;
-  console.log("Backend URI:", backendUri);
 
   const handleRegister = async (e) => {
     e.preventDefault();
@@ -36,12 +35,10 @@ const Register = () => {
           navigate('/login');
         }, 2000);
       } else {
-        setError(data.message || 'Registration failed. Please check your details.');
-        toast.error(data.message || 'Registration failed. Please check your details.');
+        setError('Registration failed. Please check your details.');
       }
     } catch (err) {
-      setError('Network error. Please try again.');
-      toast.error('Network error. Please try again.');
+      setError('Network error or something went wrong. Please try again later.');
     }
     setLoading(false);
   };
