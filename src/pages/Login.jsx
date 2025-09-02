@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import logo from '../assets/logo.png';
-import { useNavigate } from 'react-router-dom';
-import { ToastContainer, toast } from 'react-toastify';
+import { useNavigate, Link } from 'react-router-dom';
+import {  toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import useAuthStatus from '../hooks/useAuthStatus';
 
@@ -34,7 +34,7 @@ const Login = () => {
         localStorage.setItem('token', data.token);
         localStorage.setItem('user', JSON.stringify(data.user));
         login(); 
-        toast.success('Login successful! Redirecting...', { autoClose: 1000 });
+        toast.success(data?.message ||'Login successful! Redirecting...', { autoClose: 1000 });
 
         if (data.user.role === 'admin') {
           navigate('/dashboard/admin');
@@ -43,7 +43,7 @@ const Login = () => {
         }
 
       } else {
-        setError('Login failed. Please check your credentials.');
+        setError(data?.message || 'Login failed. Please check your credentials.');
       }
     } catch (err) {
       setError('Network error or something went wrong. Please try again later.');
@@ -67,7 +67,7 @@ const Login = () => {
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-green-100 via-green-200 to-green-300 p-4">
-      <ToastContainer position="top-right" />
+      
       <div className="bg-white bg-opacity-90 p-6 sm:p-8 rounded-2xl shadow-2xl w-full max-w-md animate-fadeIn">
         <div className="flex justify-center mb-2">
           <img src={logo} alt="Logo" className="w-16 h-16 animate-bounce" />
@@ -122,9 +122,12 @@ const Login = () => {
             <div className="text-red-500 text-sm text-center">{error}</div>
           )}
         </form>
+        <div>
+          <Link to="/forgot-password" className="text-sm text-green-600 hover:underline mt-4 block text-center transition-all duration-300">Forgot Password?</Link>
+        </div>
         <div className="mt-6 text-center">
           <span className="text-gray-600">Don't have an account?</span>
-          <a href="/register" className="ml-2 text-green-600 hover:underline font-semibold transition-all duration-300">Register</a>
+          <Link to="/register" className="ml-2 text-green-600 hover:underline font-semibold transition-all duration-300">Register</Link>
         </div>
       </div>
     </div>

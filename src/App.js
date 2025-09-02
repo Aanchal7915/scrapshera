@@ -7,7 +7,11 @@ import Login from "../src/pages/Login";
 import Register from "../src/pages/Register";
 import UserDashboard from "./pages/UserDashboard";
 import AdminDashboard from "./pages/AdminDashboard";
+import ForgotPassword from "./pages/ForgotPassword";
+import ResetPassword from "./pages/ChangePassword";
+import VerifyEmail from "./pages/VerifyEmail";
 import { ProtectedRoute } from "./components/ProtectedRoute";
+
 
 export default function App() {
   return (
@@ -17,6 +21,9 @@ export default function App() {
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
+        <Route path="/verify-email" element={<VerifyEmail />} />
         <Route path="/dashboard/user" element={
           <ProtectedRoute requiredRole="user">
             <UserDashboard />

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import logo from '../assets/logo.png';
-import { useNavigate } from 'react-router-dom';
-import { ToastContainer, toast } from 'react-toastify';
+import { useNavigate, Link } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 const Register = () => {
@@ -31,12 +31,12 @@ const Register = () => {
       const data = await response.json();
       if (response.ok) {
         setSuccess(true);
-        toast.success('Registration successful! Redirecting to login...', { autoClose: 2000 });
+        toast.success(data.message ||'Registration successful! Redirecting to login...', { autoClose: 5000 });
         setTimeout(() => {
           navigate('/login');
         }, 2000);
       } else {
-        setError('Registration failed. Please check your details.');
+        setError(data?.message || 'Registration failed. Please check your details.');
       }
     } catch (err) {
       setError('Network error or something went wrong. Please try again later.');
@@ -46,7 +46,7 @@ const Register = () => {
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-green-100 via-green-200 to-green-300 p-4">
-      <ToastContainer position="top-right" />
+    
       <div className="bg-white bg-opacity-90 p-6 sm:p-8 rounded-2xl shadow-2xl w-full max-w-md animate-fadeIn">
         <div className="flex justify-center mb-2">
           <img src={logo} alt="Logo" className="w-16 h-16 animate-bounce" />
@@ -127,7 +127,7 @@ const Register = () => {
         </form>
         <div className="mt-6 text-center">
           <span className="text-gray-600">Already have an account?</span>
-          <a href="/login" className="ml-2 text-green-600 hover:underline font-semibold transition-all duration-300">Login</a>
+          <Link to="/login" className="ml-2 text-green-600 hover:underline font-semibold transition-all duration-300">Login</Link>
         </div>
       </div>
     </div>
