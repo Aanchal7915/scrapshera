@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import logo from '../assets/logo.png';
 import { useNavigate, Link } from 'react-router-dom';
-import { toast } from 'react-toastify';
+import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 const Register = () => {
@@ -13,7 +13,7 @@ const Register = () => {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
   const navigate = useNavigate();
-  const backendUri=process.env.REACT_APP_BACKEND_URI;
+  const backendUri = process.env.REACT_APP_BACKEND_URI;
 
   const handleRegister = async (e) => {
     e.preventDefault();
@@ -31,10 +31,10 @@ const Register = () => {
       const data = await response.json();
       if (response.ok) {
         setSuccess(true);
-        toast.success(data.message ||'Registration successful! Redirecting to login...', { autoClose: 5000 });
-        setTimeout(() => {
-          navigate('/login');
-        }, 2000);
+        toast.success(data?.message || 'Registration successful! Redirecting to login...', { autoClose: 15000 });
+
+        navigate('/login');
+
       } else {
         setError(data?.message || 'Registration failed. Please check your details.');
       }
@@ -45,8 +45,9 @@ const Register = () => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-green-100 via-green-200 to-green-300 p-4">
     
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-green-100 via-green-200 to-green-300 p-4">
+
       <div className="bg-white bg-opacity-90 p-6 sm:p-8 rounded-2xl shadow-2xl w-full max-w-md animate-fadeIn">
         <div className="flex justify-center mb-2">
           <img src={logo} alt="Logo" className="w-16 h-16 animate-bounce" />
@@ -102,7 +103,7 @@ const Register = () => {
               placeholder="Create a password"
             />
           </div>
-          
+
           <button
             type="submit"
             className={`w-full py-2 px-4 bg-green-500 hover:bg-green-600 text-white rounded-lg shadow-lg font-semibold flex items-center justify-center transition-all duration-300 ${loading ? 'opacity-70 cursor-not-allowed' : ''}`}
